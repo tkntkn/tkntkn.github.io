@@ -19,11 +19,21 @@ const errorMessage = {
 
 var onError = error => say(errorMessage[error.code]);
 
-var _geolocation;
-var onSuccess = geolocation => {
+var _geolocation, _address;
+var onSuccess = async geolocation => {
     _geolocation = geolocation;
-    const { latitude, longitude } = geolocation.coords;
-    say(`${latitude} ${longitude}`);
+    const { latitude, longitude, accuracy } = geolocation.coords;
+    say(`${new Date().toLocaleString()} ${latitude} ${longitude} ${accuracy}`);
+
+    const url = `//maps.googleapis.com/maps/api/geocode/json?latlng=${latitude},${longitude}&locale=ja`;
+    const response = await (await fetch(url)).json();
+    const address = response.results[0].formatted_address;
+    _address = address;
+
+    const ssu = new SpeechSynthesisUtterance();
+    ssu.text = address;
+    ssu.lang = 'ja-JP';
+    speechSynthesis.speak(ssu);
     console.log(geolocation);
 };
 
