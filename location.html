@@ -19,7 +19,7 @@ const errorMessage = {
 
 var onError = error => say(errorMessage[error.code]);
 
-var _geolocation, _address;
+var _geolocation, _geocode;
 var onSuccess = async geolocation => {
     _geolocation = geolocation;
     const { latitude, longitude, accuracy } = geolocation.coords;
@@ -28,10 +28,10 @@ var onSuccess = async geolocation => {
     const url = `//maps.googleapis.com/maps/api/geocode/json?latlng=${latitude},${longitude}&locale=ja`;
     const response = await (await fetch(url)).json();
     const address = response.results[0].formatted_address;
-    _address = address;
+    _geocode = response;
 
     const ssu = new SpeechSynthesisUtterance();
-    ssu.text = address;
+    ssu.text = address.slice(13);
     ssu.lang = 'ja-JP';
     speechSynthesis.speak(ssu);
     console.log(geolocation);
