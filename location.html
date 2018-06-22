@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>tkntkn.github.io</title>
+</head>
+<body>
+  <span id="message"></span>
+  <script>
+var messageElement = document.getElementById("message");
+var say = message => messageElement.textContent = message;
+
+
+const errorMessage = {
+    0: "原因不明のエラーが発生しました…。" ,
+    1: "位置情報の取得が許可されませんでした…。" ,
+    2: "電波状況などで位置情報が取得できませんでした…。" ,
+    3: "位置情報の取得に時間がかかり過ぎてタイムアウトしました…。" ,
+} ;
+
+var onError = error => say(errorMessage[error.code]);
+
+var _geolocation;
+var onSuccess = geolocation => {
+    _geolocation = geolocation;
+    const { latitude, longitude } = geolocation.coords;
+    say(`${latitude} ${longitude}`);
+    console.log(geolocation);
+};
+
+var options = {
+    enableHighAccuracy: true,
+    timeout: 8000,
+    maximumAge: 5000,
+};
+
+if (!navigator.geolocation) {
+    say("位置情報が使えません");
+} else {
+    var watchId = navigator.geolocation.watchPosition(onSuccess, onError, options);
+}
+
+  </script>
+</body>
+</html>
