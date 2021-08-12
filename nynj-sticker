@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<title>Parcel Sandbox</title>
+	<meta charset="UTF-8" />
+</head>
+
+<body>
+	<div>
+		<h1>画像表示エリア</h1>
+		<canvas id="canvas" width="480" height="210"></canvas>
+	</div>
+	<form id="controller">
+		<h1>操作パネル</h1>
+		<div>
+			<h2 style="display:inline-block">背景色</h2>
+			<label><input name="backgroundColor" type="radio" value="#ff0000"><span style="background-color:#ff0000">赤</span></label>
+			<label><input name="backgroundColor" type="radio" value="#00ff00"><span style="background-color:#00ff00">緑</span></label>
+			<label><input name="backgroundColor" type="radio" value="#0000ff"><span style="background-color:#0000ff">青</span></label>
+		</div>
+		<div>
+			<h2 style="display:inline-block">文字色</h2>
+			<label><input name="textColor" type="radio" value="#ff0000"><span style="color:#ff0000">赤</span></label>
+			<label><input name="textColor" type="radio" value="#00ff00"><span style="color:#00ff00">緑</span></label>
+			<label><input name="textColor" type="radio" value="#0000ff"><span style="color:#0000ff">青</span></label>
+		</div>
+		<label style="display:block">
+			<h2 style="display:inline-block">市区町村名</h2>
+			<input name="cityNameJa" type="text" value="愛知県豊田市">
+		</label>
+		<label style="display:block">
+			<h2 style="display:inline-block">英語市区町村名</h2>
+			<input name="cityNameEn" type="text" value="Toyota City">
+		</label>
+		<div>
+			<h2 style="display:inline-block">ダウンロード</h2>
+			<a id="download" download="sticker.jpg">ダウンロード</a>
+		</div>
+	</form>
+
+    <script>
+let backgroundColor = "#00ff00";
+let textColor = "#ff0000";
+let cityNameJa = document.forms.controller.cityNameJa.value;
+let cityNameEn = document.forms.controller.cityNameEn.value;
+
+function draw() {
+    const canvas = document.getElementById('canvas');
+    const ctx = canvas.getContext('2d');
+
+    ctx.fillStyle = backgroundColor;
+    ctx.strokeStyle = 'none';
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+    ctx.font = "40px serif";
+    ctx.fillStyle = textColor;
+    ctx.strokeStyle = 'none';
+    ctx.fillText(cityNameJa, 10, 50);
+    ctx.fillText(cityNameEn, 10, 100);
+}
+
+draw();
+
+for (const radio of document.forms.controller.backgroundColor) {
+    radio.checked = radio.value === backgroundColor;
+    radio.addEventListener('change', (event) => {
+        backgroundColor = event.target.value;
+        draw();
+    })
+}
+
+for (const radio of document.forms.controller.textColor) {
+    radio.checked = radio.value === textColor;
+    radio.addEventListener('change', (event) => {
+        textColor = event.target.value;
+        draw();
+    })
+}
+
+document.forms.controller.cityNameJa.addEventListener('change', (event) => {
+    cityNameJa = event.target.value;
+    draw();
+})
+
+document.forms.controller.cityNameEn.addEventListener('change', (event) => {
+    cityNameEn = event.target.value;
+    draw();
+})
+
+document.getElementById('download').addEventListener('click', (event) => {
+    const canvas = document.getElementById('canvas');
+    event.target.href = canvas.toDataURL('image/jpeg');
+})
+    </script>
+</body>
+
+</html>
